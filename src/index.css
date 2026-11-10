@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+@import "tailwindcss";
+
+/* Every hover: style also answers a press, so touch screens get the same effects (hover on a mouse, active under a finger). */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &:active {
+    @slot;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 2147483647;
+  transform: translateY(-150%);
+  border-radius: 6px;
+  background: #111827;
+  color: #fff;
+  padding: 8px 12px;
+  font: 600 14px/1.2 system-ui, sans-serif;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+
+@theme {
+  --color-brand: #906E50;
+  --color-gold: #C9A678;
+  --color-ink: #080A0B;
+  --color-mute: #767676;
+  --color-brand-700: #7A5D43;
+  --color-brand-800: #634B36;
+  --color-sand: #F4EFE8;
+  --color-sand-200: #E9E0D3;
+  /* Status tones, pulled toward the warm palette so they sit with brand and gold. */
+  --color-success: #7FA37A;
+  --color-success-300: #A9C4A2;
+  --color-success-900: #1C2A1E;
+  --color-error: #D06A55;
+  --color-error-300: #E7A090;
+  --color-error-900: #2E1914;
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+/* Motion timing: things arrive slower than they change, and leave fastest. */
+:root {
+  --dur-enter: 600ms;
+  --dur-change: 250ms;
+  --dur-exit: 180ms;
+  --stagger: 60ms;
+  --ease-standard: cubic-bezier(.2, .7, .2, 1);
+  --ease-exit: cubic-bezier(.4, 0, 1, 1);
+}
+
+html { scrollbar-width: none; }
+html.is-locked { overflow: hidden; }
+html::-webkit-scrollbar { display: none; }
+body { font-family: var(--font-body); color: var(--color-ink); background: #fff; -webkit-font-smoothing: antialiased; }
+h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); }
+::selection { background: var(--color-brand); color: #fff; }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity var(--dur-exit) var(--ease-exit), transform var(--dur-exit) var(--ease-exit); }
+.reveal.in { opacity: 1; transform: none; transition-duration: var(--dur-enter); transition-timing-function: var(--ease-standard); }
+.mask-word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; }
+.mask-word > span { display: inline-block; transform: translateY(110%); transition: transform var(--dur-exit) var(--ease-exit); }
+.in .mask-word > span, .mask-word.in > span { transition-duration: calc(var(--dur-enter) + 200ms); transition-timing-function: var(--ease-standard); }
+.in .mask-word > span, .mask-word.in > span { transform: none; }
+
+@keyframes kenburns { from { transform: scale(1.18); } to { transform: scale(1); } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes loader-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes gold-flash { 0% { clip-path: inset(100% 0 0 0); opacity: .4; } 45% { clip-path: inset(0 0 0 0); opacity: .4; } 55% { clip-path: inset(0 0 0 0); opacity: .4; } 100% { clip-path: inset(100% 0 0 0); opacity: .4; } }
+.marquee { animation: marquee 32s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+
+/* Services: exploded villa */
+.blueprint-grid {
+  background-image: linear-gradient(rgba(144,110,80,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(144,110,80,.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 68% 52%, #000 25%, transparent 72%);
+}
+@keyframes panel-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.panel-in { animation: panel-in var(--dur-enter) var(--ease-standard) both; }
+
+/* Text fields: red once the visitor has tried and it is wrong, never before. */
+/* Saved step: a gradient built only from the success scale (900 into the base tone). */
+.saved-surface { background-image: linear-gradient(100deg, var(--color-success-900) 0%, color-mix(in oklab, var(--color-success-900) 55%, var(--color-success)) 100%); }
+.field:user-invalid, .field[aria-invalid='true'] { border-color: var(--color-error); }
+@keyframes villa-in { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+.villa-in { animation: villa-in 1.2s cubic-bezier(.2,.7,.2,1) .15s both; }
+
+/* Line figures (src/hairline). Theme variables carry Hairline's names at zero specificity, so any ancestor can restyle them. */
+:where([data-hl]) {
+  --hairline-plate: #fff;
+  --hairline-hi: var(--color-brand);
+  --hairline-edge: rgba(8, 10, 11, .82);
+  --hairline-mid: rgba(8, 10, 11, .46);
+  --hairline-lo: rgba(8, 10, 11, .2);
+  --hairline-stroke: 1;
+}
+:where([data-hl='dark']) {
+  --hairline-plate: var(--color-ink);
+  --hairline-hi: var(--color-gold);
+  --hairline-edge: rgba(244, 239, 232, .88);
+  --hairline-mid: rgba(244, 239, 232, .5);
+  --hairline-lo: rgba(244, 239, 232, .2);
+}
+[data-hl] :is(path, circle, ellipse) { vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; stroke-width: calc(var(--hairline-stroke) * 1px); }
+[data-hl] .sil { fill: var(--hairline-plate); stroke: var(--hairline-edge); transition: stroke .35s; }
+[data-hl] .sil.hi { stroke: var(--hairline-hi); }
+[data-hl] .nf { fill: none; }
+[data-hl] .lo { stroke: var(--hairline-lo); }
+[data-hl] .mid { stroke: var(--hairline-mid); }
+[data-hl] .nf.hi, [data-hl] .ray { stroke: var(--hairline-hi); }
+[data-hl] .dash { stroke-dasharray: 2 4; }
+[data-hl] .dot { fill: var(--hairline-hi); }
+[data-hl] .dot.m { fill: var(--hairline-mid); }
+[data-hl] .sun { fill: var(--hairline-hi); }
+[data-hl] .tint { fill: color-mix(in srgb, var(--hairline-hi) 14%, transparent); stroke: var(--hairline-hi); stroke-dasharray: 3 3; transition: opacity .3s; }
+[data-hl] .shade path { fill: var(--hairline-lo); }
+[data-hl] .shade { opacity: .55; }
+[data-hl] .hatch { stroke: var(--hairline-mid); stroke-width: .7px; }
+[data-hl] .lbl { font: 500 8px/1 var(--font-body); letter-spacing: .14em; fill: var(--hairline-mid); text-anchor: middle; }
+[data-hl] .lbl.hi { fill: var(--hairline-hi); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* Portfolio villa: hide the site header and floating actions inside a room */
+html.in-villa-room body > #root header,
+html.in-villa-room a[aria-label="WhatsApp"] { opacity: 0; pointer-events: none; transition: opacity .5s; }
+
+/* Navbar arrives as the preloader leaves. `backwards` so it never pins opacity afterwards. */
+@keyframes header-in { from { opacity: 0; transform: translateY(-24px); } }
+.header-in { animation: header-in 900ms var(--ease-standard) backwards; }
+
+/*
+ * Keyboard focus: a gold ring inside a dark halo. Gold carries it on dark
+ * surfaces, the ink halo carries it on light ones, so it reads on both.
+ */
+@layer base {
+  :where(a, button, summary, [role="button"], [role="radio"], [role="tab"], [tabindex]:not([tabindex="-1"])):focus-visible,
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--color-ink);
+  }
+}
+
+/* Skeletons: only where content genuinely arrives late (media, lazy chunks). */
+@keyframes skeleton { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+.skeleton {
+  background-color: var(--color-sand-200);
+  background-image: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / .55) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: skeleton 1.4s linear infinite;
+}
+.skeleton-dark {
+  background-color: #15181a;
+  background-image: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / .06) 50%, transparent 70%);
+}
+.skeleton.is-loaded, .skeleton:has(> .img-load[data-loaded]), .skeleton[data-ready], .skeleton[data-error] { animation: none; }
+.skeleton[data-ready] { background-image: none; }
+@keyframes img-in { from { opacity: 0; } }
+.img-in { animation: img-in .7s var(--ease-standard) backwards; }
+.img-load { opacity: 0; transition: opacity var(--dur-enter) var(--ease-standard); }
+.img-load[data-loaded] { opacity: 1; }
+
+/* Loading: a short arc turning, used inside buttons while a request is in flight. */
+@keyframes spin-arc { to { transform: rotate(360deg); } }
+.spinner { animation: spin-arc .8s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+  .spinner { animation: spin-arc 1.6s linear infinite !important; }
+}
+
+/* Counters: figures and captions are the same black as the page; a lamp's beam is the mask that shows them. */
+.lit-by-lamp {
+  --lx: 50%;
+  --ly: 50px;
+  --lit: 1;
+  color: #f4ead8;
+  -webkit-mask-image: radial-gradient(ellipse 250px 150px at var(--lx) var(--ly), rgb(0 0 0 / var(--lit)) 0%, rgb(0 0 0 / calc(var(--lit) * .55)) 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 250px 150px at var(--lx) var(--ly), rgb(0 0 0 / var(--lit)) 0%, rgb(0 0 0 / calc(var(--lit) * .55)) 45%, transparent 100%);
+}
+
+/* Home hero: a gold mark travelling down a hairline, inviting the scroll. */
+@keyframes hero-cue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(300%); } }
+@keyframes bird-flap { from { transform: scaleY(1); } to { transform: scaleY(-.55); } }
